@@ -1,5 +1,7 @@
 # 🌀 ATRACTOR DE LORENZ - VISUALIZACIÓN INTERACTIVA DEL CAOS
 
+
+
 <div align="center">
 
 ### **H'spinal Systems - Tecnología Avanzada para Soluciones Innovadoras en IA**
@@ -76,7 +78,7 @@ El **Atractor de Lorenz** es una implementación de vanguardia que combina matem
 
 <div align="center">
 
-### **🎨 Distribución por Tecnología**
+### **🎨 Distribución por Tecnología (Adobe Dreamweaver  )**
 ![Animation-DW](https://github.com/user-attachments/assets/64fde95f-7144-423d-84b2-bec2a0e16fa7)
 
 
