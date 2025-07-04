@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <!-- resto del head -->
+</head>	
+	
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atractor de Lorenz - La Belleza del Caos</title>
+    
+    <!-- Meta tags para redes sociales -->
+    <meta property="og:title" content="Visualizador del Atractor de Lorenz - La Ciencia del Efecto Mariposa">
+    <meta property="og:description" content="Explora la belleza matemática detrás del caos con esta visualización interactiva del famoso Atractor de Lorenz. Descubre cómo pequeñas variaciones crean patrones complejos.">
+    <meta property="og:image" content="assets/images/social-preview.jpg">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tu-dominio.com/lorenz-attractor">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Atractor de Lorenz - Visualización Interactiva">
+    <meta name="twitter:description" content="La ciencia del caos nunca fue tan hermosa. Experimenta con el famoso Atractor de Lorenz.">
+    <meta name="twitter:image" content="assets/images/social-preview.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/images/butterfly-logo.svg">
+    <link rel="alternate icon" href="assets/images/favicon.ico">
+    
+    <!-- Librerías externas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+    
+    <!-- Estilos CSS modulares -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/controls.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    
+    <!-- Preload de recursos críticos -->
+    <link rel="preload" href="assets/js/lorenz-equations.js" as="script">
+    <link rel="preload" href="assets/js/particle-system.js" as="script">
+    <link rel="preload" href="assets/js/chaos-visualization.js" as="script">
+</head>
+<body>
+    <!-- Pantalla de carga -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <h2>Inicializando el Caos...</h2>
+        <p>Preparando las ecuaciones de Lorenz</p>
+        <div class="loading-progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container" id="mainContainer">
+        <!-- Título principal -->
+        <header class="title fade-in">
+            <h1>Atractor de Lorenz</h1>
+            <p>La Belleza Matemática del Caos</p>
+            <span class="subtitle">Descubre cómo pequeñas variaciones crean patrones infinitos</span>
+        </header>
+
+        <!-- Canvas principal -->
+       <main class="canvas-container">
+    <canvas id="lorenzCanvas" 
+            aria-label="Visualización interactiva del Atractor de Lorenz">
+    </canvas>
+    
+</main>
+
+        <!-- Panel de información -->
+        <aside class="info-panel" id="infoPanel">
+            <h3>🦋 El Efecto Mariposa</h3>
+            <p>Observa cómo pequeñas variaciones en las condiciones iniciales crean trayectorias completamente diferentes en este sistema caótico.</p>
+            
+            <div class="parameters">
+                <h4>Parámetros de Lorenz</h4>
+                <div class="param-grid">
+                    <div class="param">
+                        <label>σ (sigma):</label>
+                        <span id="sigma">10.000</span>
+                    </div>
+                    <div class="param">
+                        <label>ρ (rho):</label>
+                        <span id="rho">28.000</span>
+                    </div>
+                    <div class="param">
+                        <label>β (beta):</label>
+                        <span id="beta">2.667</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="system-info">
+                <h4>Estado del Sistema</h4>
+                <div class="stat">
+                    <span>Tipo de Atractor:</span>
+                    <span id="attractorType">Extraño</span>
+                </div>
+                <div class="stat">
+                    <span>Región Activa:</span>
+                    <span id="activeRegion">Transición</span>
+                </div>
+                <div class="stat">
+                    <span>Divergencia:</span>
+                    <span id="divergence">Alta</span>
+                </div>
+            </div>
+
+            <!-- Controles avanzados -->
+            <div class="advanced-controls">
+                <h4>Controles Avanzados</h4>
+                
+                <div class="slider-container">
+                    <label for="sigmaSlider">σ - Número de Prandtl (5-15)</label>
+                    <input type="range" id="sigmaSlider" class="slider" min="5" max="15" step="0.1" value="10">
+                </div>
+                
+                <div class="slider-container">
+                    <label for="rhoSlider">ρ - Número de Rayleigh (20-35)</label>
+                    <input type="range" id="rhoSlider" class="slider" min="20" max="35" step="0.1" value="28">
+                </div>
+                
+                <div class="slider-container">
+                    <label for="betaSlider">β - Factor Geométrico (1-4)</label>
+                    <input type="range" id="betaSlider" class="slider" min="1" max="4" step="0.1" value="2.667">
+                </div>
+                
+                <div class="slider-container">
+                    <label for="scaleSlider">Escala de Visualización (5-20)</label>
+                    <input type="range" id="scaleSlider" class="slider" min="5" max="20" step="0.5" value="8">
+                </div>
+                
+                <div class="slider-container">
+                    <label for="speedSlider">Velocidad de Simulación (0.1-3)</label>
+                    <input type="range" id="speedSlider" class="slider" min="0.1" max="3" step="0.1" value="1">
+                </div>
+            </div>
+
+            <!-- Efectos especiales -->
+            <div class="effects-controls">
+                <h4>Efectos Visuales</h4>
+                <div class="effect-toggles">
+                    <label class="toggle">
+                        <input type="checkbox" id="bloomEffect">
+                        <span class="toggle-slider"></span>
+                        Efecto Bloom
+                    </label>
+                    <label class="toggle">
+                        <input type="checkbox" id="connectionsEffect">
+                        <span class="toggle-slider"></span>
+                        Conexiones
+                    </label>
+                    <label class="toggle">
+                        <input type="checkbox" id="chaosEffect">
+                        <span class="toggle-slider"></span>
+                        Modo Caos
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+            <!-- Controles principales optimizados -->
+        <nav class="controls fade-in" id="mainControls">
+            <div class="control-group primary">
+                <button class="control-btn active" id="playBtn" aria-label="Reproducir o pausar">
+                    <span class="btn-icon">▶</span>
+                    <span class="btn-text">Reproducir</span>
+                </button>
+                <button class="control-btn" id="resetBtn" aria-label="Reiniciar">
+                    <span class="btn-icon">🔄</span>
+                    <span class="btn-text">Reiniciar</span>
+                </button>
+                <button class="control-btn" id="speedBtn" aria-label="Velocidad">
+                    <span class="btn-icon">⚡</span>
+                    <span class="btn-text">Normal</span>
+                </button>
+            </div>
+            
+            <div class="control-group secondary">
+                <button class="control-btn" id="infoBtn" aria-label="Información">
+                    <span class="btn-icon">ℹ️</span>
+                    <span class="btn-text">Info</span>
+                </button>
+                <button class="control-btn" id="fullscreenBtn" aria-label="Pantalla completa">
+                    <span class="btn-icon">⛶</span>
+                    <span class="btn-text">Pantalla</span>
+                </button>
+                <button class="control-btn" id="captureBtn" aria-label="Capturar">
+                    <span class="btn-icon">📸</span>
+                    <span class="btn-text">Capturar</span>
+                </button>
+            </div>
+            
+            <div class="control-group share">
+                <button class="control-btn" id="shareBtn" aria-label="Compartir">
+                    <span class="btn-icon">📤</span>
+                    <span class="btn-text">Compartir</span>
+                </button>
+            </div>
+        </nav>
+
+  
+ 
+        <!-- Panel de estadísticas -->
+        <div class="stats-panel" id="statsPanel">
+            <div class="stat">
+                <span>FPS:</span>
+                <span class="stat-value" id="fpsCounter">--</span>
+            </div>
+            <div class="stat">
+                <span>Partículas:</span>
+                <span class="stat-value" id="particleCount">--</span>
+            </div>
+            <div class="stat">
+                <span>Frames:</span>
+                <span class="stat-value" id="frameCount">--</span>
+            </div>
+            <div class="stat">
+                <span>Tiempo:</span>
+                <span class="stat-value" id="elapsedTime">--</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay para efectos especiales -->
+    <div class="overlay" id="effectsOverlay"></div>
+
+    <!-- Modal de ayuda -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🦋 Guía del Atractor de Lorenz</h3>
+                <button class="close-btn" id="closeHelp">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h4>¿Qué es el Atractor de Lorenz?</h4>
+                    <p>El Atractor de Lorenz es un conjunto de soluciones caóticas de las ecuaciones diferenciales de Lorenz, que modelan la convección atmosférica. Fue descubierto por Edward Lorenz en 1963 mientras estudiaba modelos meteorológicos.</p>
+                </div>
+                
+                <div class="help-section">
+                    <h4>Controles Interactivos</h4>
+                    <ul>
+                        <li><strong>Mouse/Touch:</strong> Arrastra para rotar la visualización</li>
+                        <li><strong>Rueda del mouse:</strong> Zoom in/out</li>
+                        <li><strong>Espacio:</strong> Pausar/Reanudar</li>
+                        <li><strong>R:</strong> Reiniciar simulación</li>
+                        <li><strong>I:</strong> Mostrar/Ocultar información</li>
+                        <li><strong>F:</strong> Pantalla completa</li>
+                        <li><strong>C:</strong> Modo caos</li>
+                        <li><strong>1-4:</strong> Cambiar calidad de renderizado</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h4>Parámetros del Sistema</h4>
+                    <ul>
+                        <li><strong>σ (sigma):</strong> Número de Prandtl - controla la transferencia de calor</li>
+                        <li><strong>ρ (rho):</strong> Número de Rayleigh - controla la convección</li>
+                        <li><strong>β (beta):</strong> Factor geométrico - forma del sistema</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h4>El Efecto Mariposa</h4>
+                    <p>Observa cómo partículas que comienzan en posiciones casi idénticas divergen exponencialmente. Esto ilustra la "dependencia sensible a las condiciones iniciales" - el corazón de la teoría del caos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts JavaScript modulares -->
+    <script src="assets/js/lorenz-equations.js"></script>
+    <script src="assets/js/particle-system.js"></script>
+    <script src="assets/js/chaos-visualization.js"></script>
+    <script src="assets/js/ui-controller.js"></script>
+    
+    <!-- Script de inicialización -->
+    <script>
+        // Configuración global
+        window.LORENZ_CONFIG = {
+            autoStart: true,
+            loadingDelay: 2000,
+            defaultQuality: 'medium',
+            enableAnalytics: false,
+            version: '1.0.0'
+        };
+
+        // Inicialización con loading
+        document.addEventListener('DOMContentLoaded', function() {
+            const loading = document.getElementById('loading');
+            const progressBar = document.getElementById('progressBar');
+            const mainContainer = document.getElementById('mainContainer');
+            
+            // Simular progreso de carga
+            let progress = 0;
+            const loadingInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 100) progress = 100;
+                
+                if (progressBar) {
+                    progressBar.style.width = progress + '%';
+                }
+                
+                if (progress >= 100) {
+                    clearInterval(loadingInterval);
+                    
+                    setTimeout(() => {
+                        loading.style.opacity = '0';
+                        loading.style.pointerEvents = 'none';
+                        
+                        setTimeout(() => {
+                            loading.style.display = 'none';
+                            mainContainer.style.opacity = '1';
+                            
+                            // Inicializar la visualización
+                            if (window.chaosViz && window.LORENZ_CONFIG.autoStart) {
+                                window.chaosViz.play();
+                            }
+                        }, 500);
+                    }, 500);
+                }
+            }, 100);
+        });
+
+        // Analytics (opcional)
+        if (window.LORENZ_CONFIG.enableAnalytics) {
+            // Integrar Google Analytics o similar
+            console.log('📊 Analytics habilitado');
+        }
+
+        // Service Worker para PWA (opcional)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(registration => console.log('🔧 Service Worker registrado'))
+                .catch(error => console.log('❌ Error en Service Worker:', error));
+        }
+
+        // Manejo de errores globales
+        window.addEventListener('error', function(e) {
+            console.error('💥 Error global:', e.error);
+            
+            // Mostrar mensaje de error al usuario
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'error-notification';
+            errorMsg.innerHTML = `
+                <h4>⚠️ Error en la aplicación</h4>
+                <p>Algo salió mal. Recarga la página para continuar.</p>
+                <button onclick="location.reload()">🔄 Recargar</button>
+            `;
+            errorMsg.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(255, 71, 87, 0.9);
+                color: white;
+                padding: 20px;
+                border-radius: 10px;
+                z-index: 10000;
+                text-align: center;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            `;
+            
+            document.body.appendChild(errorMsg);
+            
+            setTimeout(() => {
+                if (document.body.contains(errorMsg)) {
+                    document.body.removeChild(errorMsg);
+                }
+            }, 10000);
+        });
+
+        // Performance monitoring
+        if (window.performance && window.performance.mark) {
+            window.performance.mark('lorenz-app-start');
+            
+            window.addEventListener('load', () => {
+                window.performance.mark('lorenz-app-loaded');
+                window.performance.measure(
+                    'lorenz-app-load-time',
+                    'lorenz-app-start',
+                    'lorenz-app-loaded'
+                );
+                
+                const loadTime = window.performance.getEntriesByName('lorenz-app-load-time')[0];
+                console.log(`⚡ Tiempo de carga: ${loadTime.duration.toFixed(2)}ms`);
+            });
+        }
+
+        // Configuración de accesibilidad
+        document.addEventListener('keydown', function(e) {
+            // Navegación por teclado mejorada
+            if (e.key === 'Tab') {
+                document.body.classList.add('keyboard-navigation');
+            }
+            
+            // Atajos de teclado globales
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 's':
+                        e.preventDefault();
+                        if (window.chaosViz) {
+                            window.chaosViz.captureFrame();
+                        }
+                        break;
+                    case 'h':
+                        e.preventDefault();
+                        document.getElementById('helpModal').style.display = 'flex';
+                        break;
+                }
+            }
+        });
+
+        document.addEventListener('mousedown', function() {
+            document.body.classList.remove('keyboard-navigation');
+        });
+
+        // Configuración de tema oscuro/claro (futuro)
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+        if (prefersDark.matches) {
+            document.body.classList.add('dark-theme');
+        }
+
+        prefersDark.addEventListener('change', (e) => {
+            if (e.matches) {
+                document.body.classList.add('dark-theme');
+            } else {
+                document.body.classList.remove('dark-theme');
+            }
+        });
+
+        // Debug mode
+        if (window.location.search.includes('debug=true')) {
+            window.LORENZ_DEBUG = true;
+            document.body.classList.add('debug-mode');
+            console.log('🐛 Modo debug activado');
+        }
+
+        // Easter egg
+        let konamiCode = [];
+        const targetCode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]; // ↑↑↓↓←→←→BA
+        
+        document.addEventListener('keydown', function(e) {
+            konamiCode.push(e.keyCode);
+            
+            if (konamiCode.length > targetCode.length) {
+                konamiCode.shift();
+            }
+            
+            if (JSON.stringify(konamiCode) === JSON.stringify(targetCode)) {
+                if (window.chaosViz) {
+                    window.chaosViz.toggleChaosMode();
+                    window.chaosViz.effects.bloom = true;
+                    window.chaosViz.effects.chromatic = true;
+                    window.chaosViz.showNotification('🌈 ¡Modo Mariposa Cósmica activado!');
+                    
+                    // Efecto especial
+                    document.body.style.animation = 'rainbow 2s infinite';
+                }
+            }
+        });
+    </script>
+
+    <!-- Estilos adicionales -->
+    <style>
+        /* Animaciones adicionales */
+        @keyframes rainbow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        /* Estilos del modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header h3 {
+            color: var(--secondary-color);
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #ccc;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .help-section {
+            margin-bottom: 25px;
+        }
+
+        .help-section h4 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .help-section p {
+            line-height: 1.6;
+            color: var(--text-medium);
+            margin-bottom: 15px;
+        }
+
+        .help-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .help-section li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-medium);
+        }
+
+        .help-section li strong {
+            color: var(--primary-color);
+        }
+
+        /* Estilos para controles avanzados */
+        .param-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .param {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+        }
+
+        .param label {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+
+        .param span {
+            font-family: 'Courier New', monospace;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        /* Toggle switches */
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            margin: 5px 0;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            transition: var(--transition-smooth);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: var(--transition-smooth);
+        }
+
+        .toggle input:checked + .toggle-slider {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .toggle input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+
+        /* Progress bar */
+        .loading-progress {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 20px auto;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Notification styles */
+        .error-notification {
+            animation: slideInFromTop 0.3s ease-out;
+        }
+
+        .error-notification button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: var(--transition-smooth);
+        }
+
+        .error-notification button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes slideInFromTop {
+            from {
+                transform: translate(-50%, -100%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .modal-content {
+                margin: 20px;
+                padding: 20px;
+                max-width: none;
+            }
+            
+            .param-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .control-group {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        /* Keyboard navigation */
+        .keyboard-navigation button:focus,
+        .keyboard-navigation input:focus,
+        .keyboard-navigation .slider:focus {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        /* Debug mode */
+        .debug-mode::before {
+            content: '🐛 DEBUG MODE';
+            position: fixed;
+            top: 0;
+            right: 0;
+            background: #ff4757;
+            color: white;
+            padding: 5px 10px;
+            font-size: 12px;
+            z-index: 10000;
+            font-family: monospace;
+        }
+    </style>
+
+    <!-- Configuración inicial de eventos -->
+    <script>
+        // Event listeners para el modal de ayuda
+        document.addEventListener('DOMContentLoaded', function() {
+            const helpModal = document.getElementById('helpModal');
+            const closeHelp = document.getElementById('closeHelp');
+            
+            if (closeHelp) {
+                closeHelp.addEventListener('click', function() {
+                    helpModal.style.display = 'none';
+                });
+            }
+            
+            // Cerrar modal con ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && helpModal.style.display === 'flex') {
+                    helpModal.style.display = 'none';
+                }
+            });
+            
+            // Cerrar modal haciendo clic fuera
+            helpModal.addEventListener('click', function(e) {
+                if (e.target === helpModal) {
+                    helpModal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+	
+	<script>
+// ===== ELIMINACIÓN NUCLEAR DE ELEMENTOS PROBLEMÁTICOS =====
+
+// CSS Nuclear - Inyectar directamente en el head
+function injectNuclearCSS() {
+    const nuclearCSS = `
+        <style id="nuclear-cleanup">
+        /* NUCLEAR CSS - OCULTAR TODO LO RELACIONADO CON QUALITY E INTERACTION */
+        
+        /* Selectores múltiples para quality panel */
+        .quality-panel,
+        #qualityPanel,
+        div[class*="quality"],
+        div[id*="quality"],
+        [class*="quality-panel"],
+        [class*="quality-options"],
+        [class*="quality-btn"],
+        .container .quality-panel,
+        .container div[class*="quality"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            position: fixed !important;
+            left: -99999px !important;
+            top: -99999px !important;
+            width: 0 !important;
+            height: 0 !important;
+            z-index: -99999 !important;
+            pointer-events: none !important;
+            overflow: hidden !important;
+        }
+        
+        /* Selectores múltiples para interaction overlay */
+        .interaction-overlay,
+        .interaction-hint,
+        #interactionOverlay,
+        div[class*="interaction"],
+        div[id*="interaction"],
+        [class*="interaction-overlay"],
+        [class*="interaction-hint"],
+        .canvas-container .interaction-overlay,
+        .canvas-container .interaction-hint,
+        .canvas-container div[class*="interaction"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            position: fixed !important;
+            left: -99999px !important;
+            top: -99999px !important;
+            width: 0 !important;
+            height: 0 !important;
+            z-index: -99999 !important;
+            pointer-events: none !important;
+            overflow: hidden !important;
+        }
+        
+        /* Forzar ocultar cualquier div que contenga texto específico */
+        div:contains("Calidad de Renderizado"),
+        div:contains("Baja"),
+        div:contains("Media"), 
+        div:contains("Alta"),
+        div:contains("Ultra"),
+        div:contains("Arrastra para rotar"),
+        div:contains("Scroll para zoom"),
+        div:contains("Espacio para pausar") {
+            display: none !important;
+        }
+        
+        /* Override absoluto para canvas-container */
+        .canvas-container > *:not(canvas) {
+            display: none !important;
+        }
+        
+        /* Asegurar canvas visible */
+        .canvas-container canvas {
+            display: block !important;
+            position: relative !important;
+            z-index: 999 !important;
+        }
+        </style>
+    `;
+    
+    document.head.insertAdjacentHTML('beforeend', nuclearCSS);
+    console.log('☢️ CSS Nuclear inyectado');
+}
+
+// Función de eliminación agresiva
+function nuclearRemoveElements() {
+    // Lista extendida de selectores
+    const selectorsToNuke = [
+        '.quality-panel', '#qualityPanel', 
+        '.interaction-overlay', '#interactionOverlay',
+        '.interaction-hint',
+        '[class*="quality"]', '[id*="quality"]',
+        '[class*="interaction"]', '[id*="interaction"]',
+        '.quality-options', '.quality-btn',
+        'div[class*="quality-"]', 'div[id*="quality-"]'
+    ];
+    
+    let removedCount = 0;
+    
+    selectorsToNuke.forEach(selector => {
+        try {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                if (element && element.parentNode) {
+                    element.parentNode.removeChild(element);
+                    removedCount++;
+                    console.log('💥 ELIMINADO:', selector, element);
+                }
+            });
+        } catch (e) {
+            console.log('❌ Error eliminando:', selector, e);
+        }
+    });
+    
+    // Eliminar por contenido de texto
+    const textsToRemove = [
+        'Calidad de Renderizado',
+        'Arrastra para rotar',
+        'Scroll para zoom', 
+        'Espacio para pausar'
+    ];
+    
+    textsToRemove.forEach(text => {
+        const walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT,
+            null,
+            false
+        );
+        
+        const textNodes = [];
+        let node;
+        while (node = walker.nextNode()) {
+            if (node.textContent.includes(text)) {
+                textNodes.push(node);
+            }
+        }
+        
+        textNodes.forEach(textNode => {
+            const parent = textNode.parentElement;
+            if (parent && parent !== document.body) {
+                parent.style.display = 'none';
+                console.log('💥 OCULTO POR TEXTO:', text, parent);
+            }
+        });
+    });
+    
+    if (removedCount > 0) {
+        console.log(`☢️ Eliminación nuclear completada: ${removedCount} elementos destruidos`);
+    }
+}
+
+// Observer nuclear para bloquear creación
+const nuclearObserver = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.addedNodes) {
+            mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === 1) {
+                    // Verificar clases problemáticas
+                    if (node.classList && (
+                        Array.from(node.classList).some(cls => 
+                            cls.includes('quality') || 
+                            cls.includes('interaction')
+                        ) ||
+                        node.id && (
+                            node.id.includes('quality') || 
+                            node.id.includes('interaction')
+                        )
+                    )) {
+                        console.log('🚫 BLOQUEANDO CREACIÓN:', node);
+                        if (node.parentNode) {
+                            node.parentNode.removeChild(node);
+                        }
+                        return;
+                    }
+                    
+                    // Verificar contenido de texto
+                    const textContent = node.textContent || '';
+                    if (textContent.includes('Calidad de Renderizado') || 
+                        textContent.includes('Arrastra para rotar') ||
+                        textContent.includes('Scroll para zoom')) {
+                        console.log('🚫 BLOQUEANDO POR CONTENIDO:', textContent.substring(0, 30));
+                        node.style.display = 'none';
+                        setTimeout(() => {
+                            if (node.parentNode) {
+                                node.parentNode.removeChild(node);
+                            }
+                        }, 100);
+                    }
+                    
+                    // Escanear hijos problemáticos
+                    setTimeout(() => {
+                        const problemChildren = node.querySelectorAll(`
+                            .quality-panel, .interaction-overlay, .interaction-hint,
+                            #qualityPanel, #interactionOverlay,
+                            [class*="quality"], [class*="interaction"]
+                        `);
+                        problemChildren.forEach(child => {
+                            console.log('🚫 ELIMINANDO HIJO PROBLEMÁTICO:', child);
+                            if (child.parentNode) {
+                                child.parentNode.removeChild(child);
+                            }
+                        });
+                    }, 50);
+                }
+            });
+        }
+    });
+});
+
+// Inicialización nuclear
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('☢️ INICIANDO LIMPIEZA NUCLEAR...');
+    
+    // Inyectar CSS inmediatamente
+    injectNuclearCSS();
+    
+    // Eliminación inicial
+    nuclearRemoveElements();
+    
+    // Eliminaciones periódicas agresivas
+    setTimeout(nuclearRemoveElements, 500);
+    setTimeout(nuclearRemoveElements, 1000);
+    setTimeout(nuclearRemoveElements, 2000);
+    setTimeout(nuclearRemoveElements, 3000);
+    setTimeout(nuclearRemoveElements, 5000);
+    
+    // Iniciar observer nuclear
+    nuclearObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'id', 'style']
+    });
+    
+    console.log('☢️ Observer nuclear activado');
+});
+
+// Limpieza continua cada 2 segundos
+setInterval(function() {
+    nuclearRemoveElements();
+}, 2000);
+
+// Función manual de emergencia
+window.NUCLEAR_CLEANUP = function() {
+    console.log('🚨 LIMPIEZA NUCLEAR DE EMERGENCIA');
+    injectNuclearCSS();
+    nuclearRemoveElements();
+    
+    // Ocultar todo lo que tenga esas palabras
+    document.querySelectorAll('*').forEach(el => {
+        const text = el.textContent || '';
+        if (text.includes('Calidad de Renderizado') || 
+            text.includes('Arrastra para rotar') ||
+            text.includes('Scroll para zoom')) {
+            el.style.display = 'none';
+        }
+    });
+};
+
+console.log('☢️ SISTEMA NUCLEAR CARGADO - Ejecuta window.NUCLEAR_CLEANUP() si es necesario');
+</script>
+</body>
+</html>

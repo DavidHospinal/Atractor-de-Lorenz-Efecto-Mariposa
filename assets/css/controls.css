@@ -1,0 +1,389 @@
+/* ===== CONTROLS.CSS - CONTROLES Y UI ===== */
+
+/* Panel de controles principal */
+.controls {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    z-index: 20;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Botones de control */
+.control-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    min-width: 120px;
+    text-align: center;
+}
+
+.control-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.control-btn:hover::before {
+    left: 100%;
+}
+
+.control-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--secondary-color);
+    box-shadow: 
+        0 0 20px rgba(131, 56, 236, 0.4),
+        0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.control-btn:active {
+    transform: translateY(0);
+    box-shadow: 
+        0 0 15px rgba(131, 56, 236, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.control-btn.active {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    border-color: transparent;
+    box-shadow: 
+        0 0 25px rgba(255, 0, 110, 0.5),
+        0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.control-btn.active:hover {
+    background: linear-gradient(45deg, #ff1a7a, #9448f0);
+    box-shadow: 
+        0 0 30px rgba(255, 0, 110, 0.6),
+        0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Botones especiales */
+.control-btn.danger {
+    border-color: #ff4757;
+}
+
+.control-btn.danger:hover {
+    background: rgba(255, 71, 87, 0.1);
+    border-color: #ff4757;
+    box-shadow: 0 0 20px rgba(255, 71, 87, 0.4);
+}
+
+.control-btn.success {
+    border-color: #2ed573;
+}
+
+.control-btn.success:hover {
+    background: rgba(46, 213, 115, 0.1);
+    border-color: #2ed573;
+    box-shadow: 0 0 20px rgba(46, 213, 115, 0.4);
+}
+
+/* Panel de información */
+.info-panel {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 320px;
+    z-index: 20;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: var(--transition-smooth);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.info-panel.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.info-panel h3 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-panel p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-medium);
+    margin-bottom: 15px;
+}
+
+.parameters {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: var(--primary-color);
+    background: rgba(255, 0, 110, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 3px solid var(--primary-color);
+}
+
+.parameters div {
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.parameters span {
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+/* Controles deslizantes */
+.slider-container {
+    margin: 15px 0;
+}
+
+.slider-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: var(--text-medium);
+}
+
+.slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    outline: none;
+    transition: var(--transition-smooth);
+}
+
+.slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255, 0, 110, 0.5);
+    transition: var(--transition-smooth);
+}
+
+.slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgba(255, 0, 110, 0.7);
+}
+
+/* Panel de estadísticas */
+.stats-panel {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    z-index: 20;
+    opacity: 0.7;
+    transition: var(--transition-smooth);
+}
+
+.stats-panel:hover {
+    opacity: 1;
+}
+
+.stats-panel .stat {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.stats-panel .stat-value {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+/* Loading spinner */
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 30;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid var(--secondary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+.loading p {
+    font-size: 1.1rem;
+    color: var(--text-medium);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+/* Tooltips */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1000;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}/* CSS Document */
+
+/* ===== QUALITY BUTTONS FIX - Agregar al final de controls.css ===== */
+
+/* Panel de calidad mejorado */
+.quality-panel {
+    position: fixed;
+    top: 40px;
+    left: 40px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 15px;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 20;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.quality-panel:hover {
+    opacity: 1;
+}
+
+.quality-panel h4 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.quality-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.quality-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 13px;
+    font-weight: 500;
+    min-width: 60px;
+    text-align: center;
+    user-select: none;
+}
+
+.quality-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 15px rgba(58, 134, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+.quality-btn.active {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) !important;
+    border-color: transparent !important;
+    box-shadow: 0 0 20px rgba(255, 0, 110, 0.5) !important;
+    color: white !important;
+    font-weight: bold !important;
+}
+
+.quality-btn.active:hover {
+    background: linear-gradient(45deg, #ff1a7a, #9448f0) !important;
+    box-shadow: 0 0 25px rgba(255, 0, 110, 0.6) !important;
+    transform: translateY(-2px);
+}
+
+/* Responsive para quality panel */
+@media (max-width: 1023px) {
+    .quality-panel {
+        top: 20px;
+        left: 20px;
+        padding: 15px;
+    }
+    
+    .quality-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+        min-width: 50px;
+    }
+}
+
+/* Ocultar en móvil pequeño */
+@media (max-width: 767px) {
+    .quality-panel {
+        display: none !important;
+    }
+}
+

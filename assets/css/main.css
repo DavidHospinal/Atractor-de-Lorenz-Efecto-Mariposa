@@ -1,0 +1,263 @@
+/* ===== MAIN.CSS - ESTILOS PRINCIPALES ===== */
+
+/* Reset y base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0a0a0a;
+    color: white;
+    overflow: hidden;
+    position: relative;
+    height: 100vh;
+}
+
+/* Layout principal */
+.container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Canvas principal */
+#lorenzCanvas {
+    background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1e 70%, #000 100%);
+    border-radius: 15px;
+    box-shadow: 
+        0 0 50px rgba(138, 43, 226, 0.3),
+        0 0 100px rgba(255, 0, 110, 0.1);
+    cursor: grab;
+    transition: all 0.3s ease;
+}
+
+#lorenzCanvas:active {
+    cursor: grabbing;
+    transform: scale(0.98);
+}
+
+#lorenzCanvas:hover {
+    box-shadow: 
+        0 0 60px rgba(138, 43, 226, 0.4),
+        0 0 120px rgba(255, 0, 110, 0.2);
+}
+
+/* Overlay general */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Título */
+.title {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.title h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #ff006e);
+    background-size: 300% 300%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 10px;
+    text-shadow: 0 0 30px rgba(255, 0, 110, 0.5);
+    animation: gradientShift 4s ease-in-out infinite;
+}
+
+.title p {
+    font-size: 1.2rem;
+    color: #cccccc;
+    opacity: 0.9;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.title .subtitle {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* Gradiente animado */
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Efectos de partículas */
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: radial-gradient(circle, #ff006e 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.particle-glow {
+    box-shadow: 
+        0 0 6px currentColor,
+        0 0 12px currentColor,
+        0 0 18px currentColor;
+}
+
+.particle-trail {
+    background: linear-gradient(90deg, 
+        rgba(255, 0, 110, 0.8) 0%, 
+        rgba(131, 56, 236, 0.6) 50%, 
+        rgba(58, 134, 255, 0.4) 100%);
+}
+
+/* Estados especiales */
+.chaos-mode {
+    animation: chaosEffect 0.1s infinite;
+}
+
+@keyframes chaosEffect {
+    0%, 100% { filter: hue-rotate(0deg); }
+    25% { filter: hue-rotate(90deg); }
+    50% { filter: hue-rotate(180deg); }
+    75% { filter: hue-rotate(270deg); }
+}
+
+/* Modo presentación */
+.presentation-mode .title {
+    top: 20px;
+}
+
+.presentation-mode .title h1 {
+    font-size: 2.2rem;
+}
+
+.presentation-mode .title p {
+    font-size: 1rem;
+}
+
+/* Variables CSS personalizadas */
+:root {
+    --primary-color: #ff006e;
+    --secondary-color: #8338ec;
+    --accent-color: #3a86ff;
+    --bg-dark: #0a0a0a;
+    --bg-medium: #1a1a2e;
+    --text-light: #ffffff;
+    --text-medium: #cccccc;
+    --text-dim: #888888;
+    
+    --shadow-glow: 0 0 30px rgba(255, 0, 110, 0.3);
+    --border-radius: 15px;
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Optimizaciones móviles adicionales */
+@media (max-width: 767px) {
+    /* Canvas responsive mejorado */
+    #lorenzCanvas {
+        touch-action: manipulation !important;
+        -webkit-transform: translateZ(0) !important;
+        transform: translateZ(0) !important;
+        will-change: transform !important;
+    }
+    
+    /* Prevenir zoom accidental */
+    .container {
+        touch-action: pan-x pan-y !important;
+        -webkit-user-select: none !important;
+        -webkit-touch-callout: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+    }
+    
+    /* Optimizar rendering */
+    .title,
+    .controls,
+    .stats-panel {
+        -webkit-transform: translateZ(0) !important;
+        transform: translateZ(0) !important;
+        will-change: transform !important;
+    }
+    
+    /* Mejorar performance de scroll */
+    .info-panel {
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior: contain !important;
+    }
+    
+    /* Botones más accesibles */
+    .control-btn {
+        min-height: 44px !important;
+        min-width: 44px !important;
+        -webkit-tap-highlight-color: rgba(255, 0, 110, 0.3) !important;
+    }
+    
+    /* Prevenir selección de texto */
+    .title, .controls, .stats-panel {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+    }
+}
+
+/* Optimizaciones generales de performance */
+#lorenzCanvas {
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    -webkit-perspective: 1000 !important;
+    perspective: 1000 !important;
+}
+
+/* Smooth scrolling */
+html {
+    -webkit-text-size-adjust: 100% !important;
+    scroll-behavior: smooth !important;
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    .control-btn {
+        transition: none !important;
+    }
+    
+    .info-panel {
+        transition: none !important;
+    }
+}
+
+/* Focus visible para navegación por teclado */
+.control-btn:focus-visible {
+    outline: 2px solid var(--accent-color) !important;
+    outline-offset: 2px !important;
+}
+
+/* Mejoras para dispositivos táctiles */
+@media (pointer: coarse) {
+    .control-btn {
+        min-height: 48px !important;
+        min-width: 48px !important;
+    }
+    
+    .quality-btn {
+        min-height: 44px !important;
+        min-width: 44px !important;
+    }
+}
