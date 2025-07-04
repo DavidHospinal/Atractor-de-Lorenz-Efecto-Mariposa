@@ -2,7 +2,6 @@
 
 <div align="center">
 
-### **📋 DOCUMENTACIÓN EJECUTIVA PROFESIONAL**  
 ### **H'spinal Systems - Tecnología Avanzada para Soluciones Innovadoras en IA**
 
 ![Version](https://img.shields.io/badge/version-1.0-blue.svg)
@@ -78,6 +77,8 @@ El **Atractor de Lorenz** es una implementación de vanguardia que combina matem
 <div align="center">
 
 ### **🎨 Distribución por Tecnología**
+![Animation-DW](https://github.com/user-attachments/assets/64fde95f-7144-423d-84b2-bec2a0e16fa7)
+
 
 </div>
 
@@ -85,6 +86,7 @@ El **Atractor de Lorenz** es una implementación de vanguardia que combina matem
 📊 JavaScript: 70.6% (3,911 líneas) - Motor Principal
 📊 CSS: 28.6% (1,581 líneas) - Diseño y Responsive  
 📊 HTML: 18.9% (1,046 líneas) - Estructura Base
+    
 ```
 
 ---
@@ -486,6 +488,9 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 ![Lorenz Attractor](https://img.shields.io/badge/Made%20with-💜%20Love%20%26%20Mathematics-purple.svg)
 ![Adobe Dreamweaver](https://img.shields.io/badge/Developed%20in-Adobe%20Dreamweaver-blue.svg)
+
+![Logo mio](https://github.com/user-attachments/assets/7af44065-9955-4377-82d3-84c49d71a903)
+
 
 **🚀 End of README Documentation**
 
