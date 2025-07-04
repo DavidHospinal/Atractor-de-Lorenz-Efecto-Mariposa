@@ -1,5 +1,6 @@
 # 🌀 ATRACTOR DE LORENZ - VISUALIZACIÓN INTERACTIVA DEL CAOS
 
+![Animation-AL002](https://github.com/user-attachments/assets/26b1690e-e2b3-4194-9ad0-cab16e1fc852)
 
 
 <div align="center">
